@@ -1,73 +1,167 @@
-# Welcome to your Lovable project
+# GridXchange - Peer-to-Peer Solar Power Sharing Platform
 
-## Project info
+A modern web application that enables rural households with solar panels to share surplus electricity with neighbors in real-time using a smart, decentralized microgrid system.
 
-**URL**: https://lovable.dev/projects/e23a2db1-5621-4373-a628-853506529b9d
+## 🌟 Features
 
-## How can I edit this code?
+- **Real-time Energy Trading**: Automatic matching between energy providers and requesters
+- **Solar Dashboard**: Monitor generation, consumption, and surplus in real-time
+- **Community Marketplace**: Post energy offers and requests with custom pricing
+- **Trade History**: Track all energy transactions and payments
+- **Multi-home Support**: Manage multiple properties with solar installations
+- **Mobile-first Design**: Responsive interface for all devices
+- **Real-time Updates**: Live data updates using Supabase subscriptions
 
-There are several ways of editing your application.
+## 🛠 Tech Stack
 
-**Use Lovable**
+- **Frontend**: React 18 + TypeScript + Vite
+- **UI**: TailwindCSS + shadcn/ui components
+- **Backend**: Supabase (PostgreSQL + Auth + Realtime)
+- **Charts**: Recharts
+- **State Management**: React Query + Context API
+- **Routing**: React Router v6
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e23a2db1-5621-4373-a628-853506529b9d) and start prompting.
+## 🚀 Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js 18+ and npm
+- Supabase account
+- Modern web browser
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd gridxchange
+   ```
 
-Follow these steps:
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+3. **Set up Supabase**
+   - Create a new Supabase project
+   - The database schema will be automatically created via migrations
+   - Configure authentication providers in Supabase dashboard
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+4. **Environment Setup**
+   - Supabase configuration is automatically managed
+   - No additional environment variables needed
 
-# Step 3: Install the necessary dependencies.
-npm i
+5. **Start development server**
+   ```bash
+   npm run dev
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+6. **Access the application**
+   - Open http://localhost:5173 in your browser
+   - Sign up for a new account or sign in
+   - Add your first home to start energy trading
+
+## 📊 Database Schema
+
+The application uses the following main tables:
+
+- **homes**: Store property information and current energy data
+- **energy_requests**: Manage energy purchase requests
+- **energy_offers**: Handle energy sale offers
+- **trades**: Record completed energy transactions
+- **profiles**: Store additional user information
+
+## 🏠 Usage Guide
+
+### 1. **Account Setup**
+- Create an account using email/password
+- Verify your email address
+- Complete your profile
+
+### 2. **Add Your Home**
+- Register your property with solar panel details
+- Input current generation and consumption data
+- Set solar capacity and location
+
+### 3. **Energy Trading**
+- **Offer Energy**: Share surplus energy with the community
+- **Request Energy**: Purchase energy when you have a deficit
+- **View Marketplace**: Browse active offers and requests
+- **Trade History**: Monitor your transaction history
+
+### 4. **Dashboard Features**
+- Real-time energy charts
+- Home performance metrics
+- Community activity overview
+- Trade statistics
+
+## 🔧 Development
+
+### Project Structure
+```
+src/
+├── components/          # Reusable UI components
+├── hooks/              # Custom React hooks
+├── lib/                # Utilities and types
+├── pages/              # Route components
+├── integrations/       # Supabase integration
+└── App.tsx             # Main application component
 ```
 
-**Edit a file directly in GitHub**
+### Key Components
+- **Dashboard**: Main energy monitoring interface
+- **EnergyChart**: Visualization of energy data
+- **HomeCard**: Individual home information display
+- **EnergyRequestForm**: Create energy purchase requests
+- **EnergyOfferForm**: Create energy sale offers
+- **TradeHistory**: Transaction history display
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Custom Hooks
+- **useAuth**: Authentication state management
+- Real-time data subscriptions via Supabase
 
-**Use GitHub Codespaces**
+## 🔐 Security
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- Row Level Security (RLS) policies protect user data
+- Authentication required for all operations
+- Users can only access their own homes and related trades
+- Secure API endpoints with proper authorization
 
-## What technologies are used for this project?
+## 🌍 Future Enhancements
 
-This project is built with:
+- **IoT Integration**: ESP32 sensors for automated energy readings
+- **ML Predictions**: AI-powered energy surplus forecasting
+- **Smart Contracts**: Blockchain-based automated trading
+- **Mobile App**: Native iOS/Android applications
+- **Payment Integration**: Real money transactions
+- **Grid Integration**: Utility company partnerships
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 📱 Mobile Support
 
-## How can I deploy this project?
+The application is fully responsive and optimized for:
+- Mobile phones (320px+)
+- Tablets (768px+)
+- Desktops (1024px+)
 
-Simply open [Lovable](https://lovable.dev/projects/e23a2db1-5621-4373-a628-853506529b9d) and click on Share -> Publish.
+## 🤝 Contributing
 
-## Can I connect a custom domain to my Lovable project?
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-Yes, you can!
+## 📄 License
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## 🆘 Support
+
+For support and questions:
+- Create an issue on GitHub
+- Check the documentation
+- Contact the development team
+
+---
+
+**GridXchange** - Building the future of distributed renewable energy 🌱⚡
