@@ -13,6 +13,12 @@ import { EnergyRequestForm } from '@/components/EnergyRequestForm';
 import { EnergyOfferForm } from '@/components/EnergyOfferForm';
 import { TradeHistory } from '@/components/TradeHistory';
 import { AddHomeDialog } from '@/components/AddHomeDialog';
+import { EnergyRequestCard } from '@/components/EnergyRequestCard';
+import { EnergyOfferCard } from '@/components/EnergyOfferCard';
+import { ActiveTrades } from '@/components/ActiveTrades';
+import { TradeNotifications } from '@/components/TradeNotifications';
+import { TradingMap } from '@/components/TradingMap';
+
 
 export function Dashboard() {
   const { user } = useAuth();
@@ -23,6 +29,7 @@ export function Dashboard() {
   const [trades, setTrades] = useState<Trade[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddHome, setShowAddHome] = useState(false);
+  const [currentTab, setCurrentTab] = useState('overview');
 
   useEffect(() => {
     if (user) {
@@ -79,8 +86,17 @@ export function Dashboard() {
 
       setHomes(allHomes || []);
       setUserHomes(myHomes || []);
-      setRequests(requestsData || []);
-      setOffers(offersData || []);
+      // Filter out expired requests and offers
+      const now = new Date();
+      const validRequests = (requestsData || []).filter(request => 
+        new Date(request.expires_at) > now && request.status === 'pending'
+      );
+      const validOffers = (offersData || []).filter(offer => 
+        new Date(offer.expires_at) > now && offer.status === 'pending'
+      );
+      
+      setRequests(validRequests);
+      setOffers(validOffers);
       setTrades(tradesData || []);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -217,11 +233,21 @@ export function Dashboard() {
           </Card>
         </div>
 
+        {/* Notifications */}
+        <TradeNotifications
+          requests={requests}
+          offers={offers}
+          userHomes={userHomes}
+          onDismiss={() => setCurrentTab('marketplace')}
+        />
+
         {/* Main Content */}
-        <Tabs defaultValue="overview" className="space-y-4">
+        <Tabs value={currentTab} onValueChange={setCurrentTab} className="space-y-4">
           <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="marketplace">Marketplace</TabsTrigger>
+            <TabsTrigger value="map">Trading Map</TabsTrigger>
+            <TabsTrigger value="active-trades">Active Trades</TabsTrigger>
             <TabsTrigger value="trades">Trade History</TabsTrigger>
           </TabsList>
 
@@ -238,9 +264,10 @@ export function Dashboard() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    {userHomes.map((home) => (
-                      <HomeCard key={home.id} home={home} />
+                   {userHomes.map((home) => (
+                   <HomeCard key={home.id} home={home} />
                     ))}
+
                   </CardContent>
                 </Card>
               </div>
@@ -254,60 +281,77 @@ export function Dashboard() {
                 <EnergyOfferForm homes={userHomes} onOfferCreated={fetchData} />
               </div>
               
-              <div className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Active Requests</CardTitle>
-                    <CardDescription>Energy requests from the community</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Active Requests</h3>
+                  <div className="space-y-4">
                     {requests.length === 0 ? (
-                      <p className="text-muted-foreground text-center py-4">No active requests</p>
+                      <Card>
+                        <CardContent className="p-6 text-center">
+                          <p className="text-muted-foreground">No active requests</p>
+                        </CardContent>
+                      </Card>
                     ) : (
-                      requests.slice(0, 3).map((request) => (
-                        <div key={request.id} className="flex items-center justify-between p-3 border rounded-lg">
-                          <div>
-                            <p className="font-medium">{request.homes?.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              Needs {request.requested_kwh} kWh at ${request.price_per_kwh}/kWh
-                            </p>
-                          </div>
-                          <Badge variant="outline">
-                            {request.status}
-                          </Badge>
-                        </div>
+                      requests.map((request) => (
+                        <EnergyRequestCard
+                          key={request.id}
+                          request={request}
+                          userHomes={userHomes}
+                          onTradeCreated={fetchData}
+                        />
                       ))
                     )}
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
                 
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Active Offers</CardTitle>
-                    <CardDescription>Energy offers from the community</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Active Offers</h3>
+                  <div className="space-y-4">
                     {offers.length === 0 ? (
-                      <p className="text-muted-foreground text-center py-4">No active offers</p>
+                      <Card>
+                        <CardContent className="p-6 text-center">
+                          <p className="text-muted-foreground">No active offers</p>
+                        </CardContent>
+                      </Card>
                     ) : (
-                      offers.slice(0, 3).map((offer) => (
-                        <div key={offer.id} className="flex items-center justify-between p-3 border rounded-lg">
-                          <div>
-                            <p className="font-medium">{offer.homes?.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              Offering {offer.offered_kwh} kWh at ${offer.price_per_kwh}/kWh
-                            </p>
-                          </div>
-                          <Badge variant="outline">
-                            {offer.status}
-                          </Badge>
-                        </div>
+                      offers.map((offer) => (
+                        <EnergyOfferCard
+                          key={offer.id}
+                          offer={offer}
+                          userHomes={userHomes}
+                          onTradeCreated={fetchData}
+                        />
                       ))
                     )}
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </div>
             </div>
+          </TabsContent>
+
+          <TabsContent value="map">
+            <TradingMap
+              homes={homes}
+              requests={requests}
+              offers={offers}
+              userHomes={userHomes}
+              onHomeSelect={(home) => {
+                // Handle home selection - could open a dialog or navigate
+                console.log('Selected home:', home);
+              }}
+              onRequestSelect={(request) => {
+                // Handle request selection - could open accept dialog
+                console.log('Selected request:', request);
+              }}
+              onOfferSelect={(offer) => {
+                // Handle offer selection - could open accept dialog
+                console.log('Selected offer:', offer);
+              }}
+            />
+          </TabsContent>
+
+          <TabsContent value="active-trades">
+            <ActiveTrades trades={trades} userHomes={userHomes} onTradeUpdated={fetchData} />
           </TabsContent>
 
           <TabsContent value="trades">

@@ -69,6 +69,11 @@ ALTER TABLE public.energy_offers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.trades ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
+ALTER TABLE public.homes
+ADD COLUMN latitude DOUBLE PRECISION,
+ADD COLUMN longitude DOUBLE PRECISION;
+
+
 -- Create RLS policies for homes
 CREATE POLICY "Users can view all homes" ON public.homes FOR SELECT USING (true);
 CREATE POLICY "Users can insert their own homes" ON public.homes FOR INSERT WITH CHECK (auth.uid() = user_id);

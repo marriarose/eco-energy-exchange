@@ -4,10 +4,16 @@ A modern web application that enables rural households with solar panels to shar
 
 ## 🌟 Features
 
-- **Real-time Energy Trading**: Automatic matching between energy providers and requesters
+- **Real-time Energy Trading**: Accept energy requests and offers with instant trade creation
+- **Smart Matching**: Automatic validation of energy availability and home compatibility
+- **Trade Management**: Complete trades and track energy transfers in real-time
 - **Solar Dashboard**: Monitor generation, consumption, and surplus in real-time
 - **Community Marketplace**: Post energy offers and requests with custom pricing
 - **Trade History**: Track all energy transactions and payments
+- **Active Trades**: Manage ongoing energy transfers with completion tracking
+- **Trading Notifications**: Get notified of new trading opportunities
+- **Location-based Trading**: View trading opportunities on a map with distance calculations
+- **Proximity Filtering**: Filter energy requests and offers by distance radius
 - **Multi-home Support**: Manage multiple properties with solar installations
 - **Mobile-first Design**: Responsive interface for all devices
 - **Real-time Updates**: Live data updates using Supabase subscriptions
@@ -15,7 +21,7 @@ A modern web application that enables rural households with solar panels to shar
 ## 🛠 Tech Stack
 
 - **Frontend**: React 18 + TypeScript + Vite
-- **UI**: TailwindCSS + shadcn/ui components
+- **UI**: TailwindCSS + shadcn/ui components (minimal set)
 - **Backend**: Supabase (PostgreSQL + Auth + Realtime)
 - **Charts**: Recharts
 - **State Management**: React Query + Context API
@@ -86,8 +92,13 @@ The application uses the following main tables:
 ### 3. **Energy Trading**
 - **Offer Energy**: Share surplus energy with the community
 - **Request Energy**: Purchase energy when you have a deficit
+- **Accept Trades**: Accept energy requests or offers from other users
+- **Manage Active Trades**: Complete trades when energy transfer is finished
 - **View Marketplace**: Browse active offers and requests
+- **Trading Map**: View all trading opportunities on an interactive map
+- **Distance Filtering**: Filter opportunities by proximity to your location
 - **Trade History**: Monitor your transaction history
+- **Trading Notifications**: Get notified of new trading opportunities
 
 ### 4. **Dashboard Features**
 - Real-time energy charts

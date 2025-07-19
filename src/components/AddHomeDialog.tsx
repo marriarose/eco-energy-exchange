@@ -4,10 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2 } from 'lucide-react';
+import { Loader2, MapPin, Navigation } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useGeolocation } from '@/hooks/useGeolocation';
 
 interface AddHomeDialogProps {
   open: boolean;
@@ -18,6 +19,8 @@ interface AddHomeDialogProps {
 export function AddHomeDialog({ open, onOpenChange, onHomeAdded }: AddHomeDialogProps) {
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
+  const [latitude, setLatitude] = useState('');
+  const [longitude, setLongitude] = useState('');
   const [solarCapacity, setSolarCapacity] = useState('');
   const [currentGeneration, setCurrentGeneration] = useState('');
   const [currentConsumption, setCurrentConsumption] = useState('');
@@ -26,6 +29,7 @@ export function AddHomeDialog({ open, onOpenChange, onHomeAdded }: AddHomeDialog
   
   const { user } = useAuth();
   const { toast } = useToast();
+  const { coords } = useGeolocation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,6 +43,8 @@ export function AddHomeDialog({ open, onOpenChange, onHomeAdded }: AddHomeDialog
           user_id: user?.id,
           name,
           location,
+          latitude: latitude ? parseFloat(latitude) : null,
+          longitude: longitude ? parseFloat(longitude) : null,
           solar_capacity_kw: parseFloat(solarCapacity),
           current_generation_kwh: parseFloat(currentGeneration),
           current_consumption_kwh: parseFloat(currentConsumption)
@@ -54,6 +60,8 @@ export function AddHomeDialog({ open, onOpenChange, onHomeAdded }: AddHomeDialog
       // Reset form
       setName('');
       setLocation('');
+      setLatitude('');
+      setLongitude('');
       setSolarCapacity('');
       setCurrentGeneration('');
       setCurrentConsumption('');
@@ -100,6 +108,51 @@ export function AddHomeDialog({ open, onOpenChange, onHomeAdded }: AddHomeDialog
               required
               disabled={loading}
             />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="latitude">Latitude</Label>
+              <div className="flex space-x-2">
+                <Input
+                  id="latitude"
+                  type="number"
+                  step="0.000001"
+                  value={latitude}
+                  onChange={(e) => setLatitude(e.target.value)}
+                  placeholder="e.g., 40.7128"
+                  disabled={loading}
+                />
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    if (coords) {
+                      setLatitude(coords.latitude.toString());
+                      setLongitude(coords.longitude.toString());
+                    }
+                  }}
+                  disabled={!coords || loading}
+                  title="Use current location"
+                >
+                  <Navigation className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="longitude">Longitude</Label>
+              <Input
+                id="longitude"
+                type="number"
+                step="0.000001"
+                value={longitude}
+                onChange={(e) => setLongitude(e.target.value)}
+                placeholder="e.g., -74.0060"
+                disabled={loading}
+              />
+            </div>
           </div>
 
           <div className="space-y-2">

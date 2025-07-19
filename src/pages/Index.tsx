@@ -6,6 +6,7 @@ import { Navbar } from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { Zap, Users, TrendingUp, Shield } from 'lucide-react';
 
+
 const Index = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();

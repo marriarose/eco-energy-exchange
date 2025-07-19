@@ -9,6 +9,9 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Zap, Loader2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from "@/integrations/supabase/client";
+import { useGeolocation } from '@/hooks/useGeolocation';
+
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -20,6 +23,7 @@ export default function Auth() {
   const { signIn, signUp, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { coords, error: geoError } = useGeolocation();
 
   // Redirect if already authenticated
   if (user) {
@@ -46,23 +50,41 @@ export default function Auth() {
     }
   };
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+const handleSignUp = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setLoading(true);
+  setError('');
 
-    const { error } = await signUp(email, password, displayName);
-    
-    if (error) {
-      setError(error.message);
-    } else {
-      toast({
-        title: "Account created!",
-        description: "Please check your email to verify your account.",
-      });
-    }
+  const { error: signUpError, data: signUpData } = await signUp(email, password, displayName);
+
+  if (signUpError) {
+    setError(signUpError.message);
     setLoading(false);
-  };
+    return;
+  }
+
+  // ✅ Save location if available
+if (coords) {
+  const { error: homeError } = await supabase.from('homes').insert({
+    user_id: signUpData.user?.id,
+    name: displayName,
+    latitude: coords.latitude,
+    longitude: coords.longitude,
+  });
+
+  if (homeError) {
+    console.warn("Failed to save location:", homeError.message);
+  }
+}
+
+  toast({
+    title: "Account created!",
+    description: "Please check your email to verify your account.",
+  });
+
+  setLoading(false);
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted p-4">

@@ -3,6 +3,8 @@ export interface Home {
   user_id: string;
   name: string;
   location: string;
+  latitude?: number;
+  longitude?: number;
   solar_capacity_kw: number;
   current_generation_kwh: number;
   current_consumption_kwh: number;
