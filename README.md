@@ -26,7 +26,7 @@ A modern web application that enables rural households with solar panels to shar
 - **Charts**: Recharts
 - **State Management**: React Query + Context API
 - **Routing**: React Router v6
--✔️  Deployment complete! Visit your project at
+-✔️  Deployment complete! Visit your project at https://vercel.com/marria-rose-k-bs-projects/eco-energy-exchange
 
 ## 🚀 Getting Started
 
